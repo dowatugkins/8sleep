@@ -19,6 +19,7 @@
 		5144A82EC7918E0B7A2E6CEA /* libPods-eightsleep-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B651428E9907695A37F8317 /* libPods-eightsleep-tvOSTests.a */; };
 		5EFB5374E589B3DF30543FC0 /* libPods-eightsleep-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F9F8458CC91EFB55C3F3503E /* libPods-eightsleep-tvOS.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		85D59FF9258036C5000E7F95 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB61A68108700A75B9A /* Info.plist */; };
 		8CC872F40EED10AB57BD0EA7 /* libPods-eightsleep-eightsleepTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A4BB53CBEFA538D548005984 /* libPods-eightsleep-eightsleepTests.a */; };
 /* End PBXBuildFile section */
 
@@ -194,7 +195,6 @@
 				D2321BCD8CCE79D32550978F /* Pods-eightsleep-tvOSTests.debug.xcconfig */,
 				C40D80D83498ED92DF23C812 /* Pods-eightsleep-tvOSTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -342,6 +342,7 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				85D59FF9258036C5000E7F95 /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -5,7 +5,7 @@
  * @module app/components/common
  */
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
   View,
   StyleSheet,
@@ -14,19 +14,10 @@ import PropTypes from 'prop-types';
 import AnimatedNumbers from 'react-native-animated-numbers';
 
 function AnimatedNumber(props) {
-  const [currentNumber, setCurrentNumber] = useState(false);
-
-  useEffect(() => {
-    if (props.number !== currentNumber) {
-      setCurrentNumber(props.number);
-    }
-  }, [props.number, currentNumber]);
-
   return (
     <View style={styles.numberContainer}>
       <AnimatedNumbers
-        includeComma
-        animateToNumber={currentNumber}
+        animateToNumber={props.number}
         fontStyle={{ fontSize: 20, fontWeight: 'bold' }}
       />
     </View>
@@ -39,7 +30,6 @@ AnimatedNumber.propTypes = {
 
 const styles = StyleSheet.create({
   numberContainer: {
-    flex: 1,
   },
 });
 

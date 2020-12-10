@@ -10,6 +10,7 @@ import {
   View,
   StyleSheet,
   FlatList,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import { get } from 'lodash';
 
@@ -26,12 +27,21 @@ const sleepUrls = [
 
 function SleepView() {
   const [currentUser, setCurrentUser] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const { fetching, sleepData } = useSleepData(sleepUrls);
 
-  const renderInterval = ({ item }) => {
+  const updateIndex = (index) => {
+    setCurrentIndex(index);
+  };
+
+  const renderInterval = ({ item, index }) => {
     return (
-      <Interval data={item} />
+      <TouchableWithoutFeedback onPress={() => updateIndex(index)}>
+        <View>
+          <Interval isOpen={currentIndex === index} data={item} />
+        </View>
+      </TouchableWithoutFeedback>
     );
   };
 
@@ -76,6 +86,13 @@ function SleepView() {
             <Text>Individual #{currentUser + 1}</Text>
             <IconButton name="keyboard-arrow-right" type="MaterialIcon" size={40} onPress={onRightPress} />
           </View>
+          <View style={styles.row}>
+            <Text style={{ color: Colors.awake, fontSize: 10 }}>Awake</Text>
+            <Text style={{ color: Colors.bed, fontSize: 10 }}>Out of Bed</Text>
+            <Text style={{ color: Colors.deep, fontSize: 10 }}>Deep Sleep</Text>
+            <Text style={{ color: Colors.light, fontSize: 10 }}>Light Sleep</Text>
+            <Text style={{ fontSize: 10 }}>Toss and Turn</Text>
+          </View>
           {renderUser({ userData: get(sleepData, `${currentUser}`, {}) })}
         </View> : null}
     </View>
@@ -108,6 +125,11 @@ const styles = StyleSheet.create({
     height: 1,
     marginHorizontal: 5,
   },
+
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  }
 });
 
 export default SleepView;

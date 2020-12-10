@@ -4,4 +4,8 @@ export default {
   home: '#0ae973',
   bed: '#4a95ff',
   lungs: '#d109e4',
+  awake: '#f42069',
+  deep: '#0ae973',
+  out: '#4a95ff',
+  light: '#ff6700',
 };

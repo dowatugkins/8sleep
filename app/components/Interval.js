@@ -5,10 +5,11 @@
  * @module app/components
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   StyleSheet,
+  Animated,
 } from 'react-native';
 import PropTypes from 'prop-types';
 import { get } from 'lodash';
@@ -17,7 +18,7 @@ import Svg, { Polyline } from 'react-native-svg';
 import { Text, TimelineBar, IconButton, AnimatedNumber } from 'common';
 import { Colors } from 'styles';
 
-function Interval({ data }) {
+function Interval({ data, isOpen }) {
   const [heartRateRange, setHeartRateRange] = useState();
   const [bedTempRange, setBedTempRange] = useState();
   const [roomTempRange, setRoomTempRange] = useState();
@@ -32,6 +33,11 @@ function Interval({ data }) {
   const [homeSize, setHomeSize] = useState(25);
   const [bedSize, setBedSize] = useState(25);
   const [respSize, setRespSize] = useState(25);
+  const animatedHeight = useRef(new Animated.Value(isOpen ? 221 : 50)).current;
+
+  useEffect(() => {
+    startAnimation();
+  }, [isOpen, animatedHeight]);
 
   useEffect(() => {
     const startStamp = new Date(data.ts);
@@ -110,6 +116,14 @@ function Interval({ data }) {
     setDisplayRange([heartRange[0] - 5, heartRange[1] + 5]);
   }, [data]);
 
+  const startAnimation = () => {
+    Animated.spring(animatedHeight, {
+      toValue: isOpen ? 221 : 50,
+      // duration: 500,
+      useNativeDriver: false,
+    }).start();
+  };
+
   const heartPressed = () => {
     setDisplayRange(heartRateRange);
     setCurrentGraph('hr');
@@ -186,10 +200,8 @@ function Interval({ data }) {
         break;
       case 'home':
         if (!roomTempRange) {
-          console.log('null room');
           return null;
         }
-        console.log('not null room');
         points = get(data, 'timeseries.tempRoomC', []).reduce((accumulator, rate, index) => {
           const y = findPointOnYAxis(height, roomTempRange, rate[1]);
           const x = findPointOnXAxis(width, get(data, 'timeseries.tempRoomC.length', 1), index);
@@ -236,9 +248,9 @@ function Interval({ data }) {
   };
 
   return (
-    <View style={styles.container}>
+    <Animated.View style={[styles.container, { height: animatedHeight }]}>
       <View style={styles.row}>
-        <TimelineBar stages={data.stages} tnt={data.timeseries.tnt}/>
+        <TimelineBar stages={data.stages} tnt={data.timeseries.tnt} startTime={data.ts} />
         <Text>{date.getMonth() + 1}/{date.getDate()}/{date.getFullYear()}</Text>
       </View>
       <View style={styles.row}>
@@ -247,7 +259,7 @@ function Interval({ data }) {
         <Text style={styles.score}>Score: </Text><AnimatedNumber number={data.score} />
       </View>
       <View style={styles.row}>
-      <View style={styles.column}>
+        <View style={styles.column}>
           <IconButton onPress={heartPressed} type="MaterialCommunityIcon" name="heart-pulse" size={heartSize} style={{ alignSelf: 'center', color: Colors.heart }}/>
           <IconButton onPress={homePressed} type="MaterialIcon" name="home" size={homeSize} style={{ alignSelf: 'center', color: Colors.home }}/>
           <IconButton onPress={bedPressed} type="MaterialCommunityIcon" name="bed-empty" size={bedSize} style={{ alignSelf: 'center', color: Colors.bed }}/>
@@ -267,25 +279,27 @@ function Interval({ data }) {
                 {renderGraph()}
               </View>
               <View style={[styles.row, { justifyContent: 'space-between', paddingVertical: 0 }]} >
-                <Text>{timeRange[0].getHours()%12}</Text>
-                <Text>{timeRange[1].getHours()%12}</Text>
+                <Text>{timeRange[0].getHours()%12 === 0 ? 12 : timeRange[0].getHours()%12}</Text>
+                <Text>{timeRange[1].getHours()%12 === 0 ? 12 : timeRange[1].getHours()%12}</Text>
               </View>
             </View>
           </View>
         </View>
       </View>
-    </View>
+    </Animated.View>
   );
 }
 
 Interval.propTypes = {
   data: PropTypes.object,
+  isOpen: PropTypes.bool.isRequired,
 };
 
 const styles = StyleSheet.create({
   container: {
     padding: 10,
     marginVertical: 10,
+    overflow: 'hidden',
   },
 
   row: {
